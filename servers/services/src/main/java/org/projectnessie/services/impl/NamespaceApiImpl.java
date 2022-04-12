@@ -31,6 +31,7 @@ import javax.annotation.Nullable;
 import org.projectnessie.api.NamespaceApi;
 import org.projectnessie.api.params.MultipleNamespacesParams;
 import org.projectnessie.api.params.NamespaceParams;
+import org.projectnessie.api.params.NamespacePropertyUpdate;
 import org.projectnessie.error.NessieNamespaceAlreadyExistsException;
 import org.projectnessie.error.NessieNamespaceNotEmptyException;
 import org.projectnessie.error.NessieNamespaceNotFoundException;
@@ -41,6 +42,7 @@ import org.projectnessie.model.Content.Type;
 import org.projectnessie.model.ContentKey;
 import org.projectnessie.model.GetNamespacesResponse;
 import org.projectnessie.model.ImmutableGetNamespacesResponse;
+import org.projectnessie.model.ImmutableNamespace;
 import org.projectnessie.model.Namespace;
 import org.projectnessie.model.Operation.Delete;
 import org.projectnessie.model.Operation.Put;
@@ -215,6 +217,36 @@ public class NamespaceApiImpl extends BaseApiImpl implements NamespaceApi {
       return response.build();
     } catch (ReferenceNotFoundException e) {
       throw refNotFoundException(e);
+    }
+  }
+
+  @Override
+  public void updateProperties(
+      NamespaceParams params, NamespacePropertyUpdate namespacePropertyUpdate)
+      throws NessieNamespaceNotFoundException, NessieReferenceNotFoundException {
+    try {
+      BranchName branch = branchFromRefName(params.getRefName());
+
+      Namespace namespace = getNamespace(params.getNamespace(), branch);
+      Map<String, String> properties = new HashMap<>(namespace.getProperties());
+      if (null != namespacePropertyUpdate.getPropertyRemovals()) {
+        namespacePropertyUpdate.getPropertyRemovals().forEach(properties::remove);
+      }
+      if (null != namespacePropertyUpdate.getPropertyUpdates()) {
+        properties.putAll(namespacePropertyUpdate.getPropertyUpdates());
+      }
+
+      Namespace updatedNamespace = ImmutableNamespace.copyOf(namespace).withProperties(properties);
+
+      Put put = Put.of(ContentKey.of(updatedNamespace.getElements()), updatedNamespace);
+      commit(
+          branch,
+          "update properties for namespace " + updatedNamespace.name(),
+          TreeApiImpl.toOp(put),
+          () -> null);
+
+    } catch (ReferenceNotFoundException | ReferenceConflictException e) {
+      throw new NessieReferenceNotFoundException(e.getMessage(), e);
     }
   }
 

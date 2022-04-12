@@ -19,6 +19,7 @@ import javax.validation.constraints.NotNull;
 import org.projectnessie.api.http.HttpNamespaceApi;
 import org.projectnessie.api.params.MultipleNamespacesParams;
 import org.projectnessie.api.params.NamespaceParams;
+import org.projectnessie.api.params.NamespacePropertyUpdate;
 import org.projectnessie.error.NessieNamespaceAlreadyExistsException;
 import org.projectnessie.error.NessieNamespaceNotEmptyException;
 import org.projectnessie.error.NessieNamespaceNotFoundException;
@@ -84,5 +85,18 @@ class HttpNamespaceClient implements HttpNamespaceApi {
         .queryParam("hashOnRef", params.getHashOnRef())
         .get()
         .readEntity(GetNamespacesResponse.class);
+  }
+
+  @Override
+  public void updateProperties(
+      NamespaceParams params, NamespacePropertyUpdate namespacePropertyUpdate)
+      throws NessieNamespaceNotFoundException, NessieReferenceNotFoundException {
+    client
+        .newRequest()
+        .path("namespaces/namespace/{ref}/{name}/properties")
+        .resolveTemplate("ref", params.getRefName())
+        .resolveTemplate("name", params.getNamespace().toPathString())
+        .queryParam("hashOnRef", params.getHashOnRef())
+        .post(namespacePropertyUpdate);
   }
 }

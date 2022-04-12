@@ -25,10 +25,13 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import javax.validation.constraints.NotNull;
 import org.immutables.value.Value;
+import org.immutables.value.Value.Default;
 import org.immutables.value.Value.Derived;
 
 /**
@@ -78,6 +81,11 @@ public abstract class Namespace extends Content {
   @NotNull
   public abstract List<String> getElements();
 
+  @Default
+  public Map<String, String> getProperties() {
+    return Collections.unmodifiableMap(new HashMap<>());
+  }
+
   /**
    * Builds a {@link Namespace} instance for the given elements.
    *
@@ -86,6 +94,18 @@ public abstract class Namespace extends Content {
    *     Namespace#name()} will be an empty string.
    */
   public static Namespace of(String... elements) {
+    return Namespace.of(new HashMap<>(), elements);
+  }
+
+  /**
+   * Builds a {@link Namespace} instance for the given elements and the given properties.
+   *
+   * @param elements The elements to build the namespace from.
+   * @param properties The namespace properties.
+   * @return The constructed {@link Namespace} instance. If <b>elements</b> is empty, then {@link
+   *     Namespace#name()} will be an empty string.
+   */
+  public static Namespace of(Map<String, String> properties, String... elements) {
     Objects.requireNonNull(elements, "elements must be non-null");
     if (elements.length == 0 || (elements.length == 1 && "".equals(elements[0]))) {
       return EMPTY;
@@ -115,7 +135,10 @@ public abstract class Namespace extends Content {
           String.format(ERROR_MSG_TEMPLATE, Arrays.toString(elements)));
     }
 
-    return ImmutableNamespace.builder().elements(Arrays.asList(elements)).build();
+    return ImmutableNamespace.builder()
+        .elements(Arrays.asList(elements))
+        .properties(properties)
+        .build();
   }
 
   /**
@@ -128,6 +151,19 @@ public abstract class Namespace extends Content {
   public static Namespace of(List<String> elements) {
     Objects.requireNonNull(elements, "elements must be non-null");
     return Namespace.of(elements.toArray(new String[0]));
+  }
+
+  /**
+   * Builds a {@link Namespace} instance for the given elements and the given properties.
+   *
+   * @param elements The elements to build the namespace from.
+   * @param properties The properties of the namespace.
+   * @return The constructed {@link Namespace} instance. If <b>elements</b> is empty, then {@link
+   *     Namespace#name()} will be an empty string.
+   */
+  public static Namespace of(List<String> elements, Map<String, String> properties) {
+    Objects.requireNonNull(elements, "elements must be non-null");
+    return Namespace.of(properties, elements.toArray(new String[0]));
   }
 
   /**
