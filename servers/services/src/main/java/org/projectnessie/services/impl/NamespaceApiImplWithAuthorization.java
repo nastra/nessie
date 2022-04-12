@@ -18,6 +18,7 @@ package org.projectnessie.services.impl;
 import java.security.Principal;
 import org.projectnessie.api.params.MultipleNamespacesParams;
 import org.projectnessie.api.params.NamespaceParams;
+import org.projectnessie.api.params.NamespaceUpdate;
 import org.projectnessie.error.NessieNamespaceAlreadyExistsException;
 import org.projectnessie.error.NessieNamespaceNotEmptyException;
 import org.projectnessie.error.NessieNamespaceNotFoundException;
@@ -43,9 +44,9 @@ public class NamespaceApiImplWithAuthorization extends NamespaceApiImpl {
   }
 
   @Override
-  public Namespace createNamespace(NamespaceParams params)
+  public Namespace createNamespace(NamespaceParams params, NamespaceUpdate namespaceUpdate)
       throws NessieNamespaceAlreadyExistsException, NessieReferenceNotFoundException {
-    return super.createNamespace(params);
+    return super.createNamespace(params, namespaceUpdate);
   }
 
   @Override

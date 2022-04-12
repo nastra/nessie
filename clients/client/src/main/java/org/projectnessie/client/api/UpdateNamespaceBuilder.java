@@ -28,9 +28,13 @@ import org.projectnessie.model.Namespace;
  */
 public interface UpdateNamespaceBuilder extends OnNamespaceBuilder<UpdateNamespaceBuilder> {
 
-  UpdateNamespaceBuilder propertyRemovals(List<String> propertyRemovals);
+  UpdateNamespaceBuilder updateProperty(String key, String value);
 
-  UpdateNamespaceBuilder propertyUpdates(Map<String, String> propertyUpdates);
+  UpdateNamespaceBuilder deleteProperty(String key);
+
+  UpdateNamespaceBuilder updateProperties(Map<String, String> propertyUpdates);
+
+  UpdateNamespaceBuilder removeProperties(List<String> propertyRemovals);
 
   void update() throws NessieNamespaceNotFoundException, NessieReferenceNotFoundException;
 }

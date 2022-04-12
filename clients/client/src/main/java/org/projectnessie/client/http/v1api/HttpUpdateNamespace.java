@@ -55,13 +55,25 @@ final class HttpUpdateNamespace extends BaseHttpRequest implements UpdateNamespa
   }
 
   @Override
-  public UpdateNamespaceBuilder propertyRemovals(List<String> propertyRemovals) {
+  public UpdateNamespaceBuilder removeProperties(List<String> propertyRemovals) {
     updateBuilder.propertyRemovals(propertyRemovals);
     return this;
   }
 
   @Override
-  public UpdateNamespaceBuilder propertyUpdates(Map<String, String> propertyUpdates) {
+  public UpdateNamespaceBuilder updateProperty(String key, String value) {
+    updateBuilder.putPropertyUpdates(key, value);
+    return this;
+  }
+
+  @Override
+  public UpdateNamespaceBuilder deleteProperty(String key) {
+    updateBuilder.addPropertyRemovals(key);
+    return this;
+  }
+
+  @Override
+  public UpdateNamespaceBuilder updateProperties(Map<String, String> propertyUpdates) {
     updateBuilder.propertyUpdates(propertyUpdates);
     return this;
   }

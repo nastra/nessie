@@ -29,14 +29,14 @@ import org.projectnessie.model.Namespace;
 public interface NamespaceApi {
 
   /**
-   * Creates a new namespace.
+   * Creates a new namespace with Namespace properties.
    *
    * @param params The {@link NamespaceParams} that includes the parameters for the API call.
    * @return A {@link Namespace} instance if creating the namespace succeeded.
    * @throws NessieReferenceNotFoundException If the reference could not be found.
    * @throws NessieNamespaceAlreadyExistsException If the namespace already exists.
    */
-  Namespace createNamespace(@NotNull NamespaceParams params)
+  Namespace createNamespace(@NotNull NamespaceParams params, @NotNull NamespaceUpdate properties)
       throws NessieNamespaceAlreadyExistsException, NessieReferenceNotFoundException;
 
   /**

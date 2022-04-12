@@ -15,7 +15,9 @@
  */
 package org.projectnessie.client.http.v1api;
 
+import java.util.Map;
 import javax.annotation.Nullable;
+import org.projectnessie.api.params.ImmutableNamespaceUpdate;
 import org.projectnessie.api.params.NamespaceParams;
 import org.projectnessie.api.params.NamespaceParamsBuilder;
 import org.projectnessie.client.api.CreateNamespaceBuilder;
@@ -27,6 +29,7 @@ import org.projectnessie.model.Namespace;
 final class HttpCreateNamespace extends BaseHttpRequest implements CreateNamespaceBuilder {
 
   private final NamespaceParamsBuilder builder = NamespaceParams.builder();
+  private Map<String, String> properties;
 
   HttpCreateNamespace(NessieApiClient client) {
     super(client);
@@ -51,8 +54,18 @@ final class HttpCreateNamespace extends BaseHttpRequest implements CreateNamespa
   }
 
   @Override
+  public CreateNamespaceBuilder properties(Map<String, String> properties) {
+    this.properties = properties;
+    return this;
+  }
+
+  @Override
   public Namespace create()
       throws NessieNamespaceAlreadyExistsException, NessieReferenceNotFoundException {
-    return client.getNamespaceApi().createNamespace(builder.build());
+    return client
+        .getNamespaceApi()
+        .createNamespace(
+            builder.build(),
+            ImmutableNamespaceUpdate.builder().propertyUpdates(properties).build());
   }
 }

@@ -75,9 +75,9 @@ public class RestNamespaceResource implements HttpNamespaceApi {
   }
 
   @Override
-  public Namespace createNamespace(@NotNull NamespaceParams params)
+  public Namespace createNamespace(NamespaceParams params, NamespaceUpdate properties)
       throws NessieNamespaceAlreadyExistsException, NessieReferenceNotFoundException {
-    return resource().createNamespace(params);
+    return resource().createNamespace(params, properties);
   }
 
   @Override

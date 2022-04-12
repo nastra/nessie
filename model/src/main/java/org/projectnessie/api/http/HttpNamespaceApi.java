@@ -68,7 +68,8 @@ public interface HttpNamespaceApi extends NamespaceApi {
     @APIResponse(responseCode = "404", description = "Reference not found"),
     @APIResponse(responseCode = "409", description = "Namespace already exists"),
   })
-  Namespace createNamespace(@BeanParam @NotNull NamespaceParams params)
+  Namespace createNamespace(
+      @BeanParam @NotNull NamespaceParams params, @NotNull @RequestBody NamespaceUpdate properties)
       throws NessieNamespaceAlreadyExistsException, NessieReferenceNotFoundException;
 
   @Override

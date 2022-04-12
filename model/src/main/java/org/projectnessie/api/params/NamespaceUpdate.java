@@ -28,8 +28,8 @@ import org.immutables.value.Value;
 public abstract class NamespaceUpdate {
 
   @Nullable
-  public abstract List<String> getPropertyRemovals();
+  public abstract Map<String, String> getPropertyUpdates();
 
   @Nullable
-  public abstract Map<String, String> getPropertyUpdates();
+  public abstract List<String> getPropertyRemovals();
 }

@@ -36,7 +36,7 @@ class HttpNamespaceClient implements HttpNamespaceApi {
   }
 
   @Override
-  public Namespace createNamespace(@NotNull NamespaceParams params)
+  public Namespace createNamespace(NamespaceParams params, NamespaceUpdate properties)
       throws NessieNamespaceAlreadyExistsException, NessieReferenceNotFoundException {
     return client
         .newRequest()
@@ -44,7 +44,7 @@ class HttpNamespaceClient implements HttpNamespaceApi {
         .resolveTemplate("ref", params.getRefName())
         .resolveTemplate("name", params.getNamespace().toPathString())
         .queryParam("hashOnRef", params.getHashOnRef())
-        .put(params.getNamespace())
+        .put(properties)
         .readEntity(Namespace.class);
   }
 

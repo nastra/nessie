@@ -466,10 +466,16 @@ public abstract class AbstractRestNamespace extends AbstractRestRefLog {
   public void testNamespaceWithProperties() throws BaseNessieClientServerException {
     Branch branch = createBranch("namespaceWithProperties");
     Map<String, String> properties = ImmutableMap.of("key1", "val1", "key2", "val2");
-    Namespace namespace = Namespace.of("a", "b", "c");
+    Namespace namespace = Namespace.of(properties, "a", "b", "c");
 
-    Namespace ns = getApi().createNamespace().namespace(namespace).reference(branch).create();
-    assertThat(ns.getProperties()).isEmpty();
+    Namespace ns =
+        getApi()
+            .createNamespace()
+            .namespace(namespace)
+            .properties(properties)
+            .reference(branch)
+            .create();
+    assertThat(ns.getProperties()).isEqualTo(properties);
 
     assertThatThrownBy(
             () ->
@@ -477,7 +483,7 @@ public abstract class AbstractRestNamespace extends AbstractRestRefLog {
                     .updateProperties()
                     .reference(branch)
                     .namespace("non-existing")
-                    .propertyUpdates(properties)
+                    .updateProperties(properties)
                     .update())
         .isInstanceOf(NessieNamespaceNotFoundException.class)
         .hasMessage("Namespace 'non-existing' does not exist");
@@ -486,7 +492,7 @@ public abstract class AbstractRestNamespace extends AbstractRestRefLog {
         .updateProperties()
         .reference(branch)
         .namespace(namespace)
-        .propertyUpdates(properties)
+        .updateProperties(properties)
         .update();
 
     ns = getApi().getNamespace().reference(branch).namespace(namespace).get();
@@ -496,8 +502,8 @@ public abstract class AbstractRestNamespace extends AbstractRestRefLog {
         .updateProperties()
         .reference(branch)
         .namespace(namespace)
-        .propertyUpdates(ImmutableMap.of("key3", "val3", "key1", "xyz"))
-        .propertyRemovals(Arrays.asList("key2", "key5"))
+        .updateProperties(ImmutableMap.of("key3", "val3", "key1", "xyz"))
+        .removeProperties(Arrays.asList("key2", "key5"))
         .update();
     ns = getApi().getNamespace().reference(branch).namespace(namespace).get();
     assertThat(ns.getProperties()).isEqualTo(ImmutableMap.of("key1", "xyz", "key3", "val3"));

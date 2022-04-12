@@ -68,7 +68,7 @@ public class NamespaceApiImpl extends BaseApiImpl implements NamespaceApi {
   }
 
   @Override
-  public Namespace createNamespace(NamespaceParams params)
+  public Namespace createNamespace(NamespaceParams params, NamespaceUpdate properties)
       throws NessieNamespaceAlreadyExistsException, NessieReferenceNotFoundException {
     try {
       BranchName branch = branchFromRefName(params.getRefName());
@@ -93,10 +93,15 @@ public class NamespaceApiImpl extends BaseApiImpl implements NamespaceApi {
           };
 
       Preconditions.checkArgument(!namespace.isEmpty(), "Namespace name must not be empty");
-      Put put = Put.of(ContentKey.of(namespace.getElements()), namespace);
+      Namespace nsWithProps = namespace;
+      if (null != properties.getPropertyUpdates()) {
+        nsWithProps =
+            ImmutableNamespace.copyOf(namespace).withProperties(properties.getPropertyUpdates());
+      }
+      Put put = Put.of(ContentKey.of(namespace.getElements()), nsWithProps);
       commit(branch, "create namespace " + namespace.name(), TreeApiImpl.toOp(put), validator);
 
-      return namespace;
+      return nsWithProps;
     } catch (ReferenceNotFoundException | ReferenceConflictException e) {
       throw new NessieReferenceNotFoundException(e.getMessage(), e);
     }
@@ -143,9 +148,9 @@ public class NamespaceApiImpl extends BaseApiImpl implements NamespaceApi {
 
   /**
    * First tries to look whether a namespace with the given name was explicitly created via {@link
-   * NamespaceApi#createNamespace(NamespaceParams)}, and then checks if there is an implicit
-   * namespace. An implicitly created namespace generally occurs when adding a table 'a.b.c.table'
-   * where the 'a.b.c' part * represents the namespace.
+   * NamespaceApi#createNamespace(NamespaceParams, NamespaceUpdate)}, and then checks if there is an
+   * implicit namespace. An implicitly created namespace generally occurs when adding a table
+   * 'a.b.c.table' where the 'a.b.c' part * represents the namespace.
    *
    * @param namespace The namespace to fetch
    * @param branch The ref to use
