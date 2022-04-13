@@ -31,7 +31,7 @@ import javax.annotation.Nullable;
 import org.projectnessie.api.NamespaceApi;
 import org.projectnessie.api.params.MultipleNamespacesParams;
 import org.projectnessie.api.params.NamespaceParams;
-import org.projectnessie.api.params.NamespacePropertyUpdate;
+import org.projectnessie.api.params.NamespaceUpdate;
 import org.projectnessie.error.NessieNamespaceAlreadyExistsException;
 import org.projectnessie.error.NessieNamespaceNotEmptyException;
 import org.projectnessie.error.NessieNamespaceNotFoundException;
@@ -221,19 +221,18 @@ public class NamespaceApiImpl extends BaseApiImpl implements NamespaceApi {
   }
 
   @Override
-  public void updateProperties(
-      NamespaceParams params, NamespacePropertyUpdate namespacePropertyUpdate)
+  public void updateProperties(NamespaceParams params, NamespaceUpdate namespaceUpdate)
       throws NessieNamespaceNotFoundException, NessieReferenceNotFoundException {
     try {
       BranchName branch = branchFromRefName(params.getRefName());
 
       Namespace namespace = getNamespace(params.getNamespace(), branch);
       Map<String, String> properties = new HashMap<>(namespace.getProperties());
-      if (null != namespacePropertyUpdate.getPropertyRemovals()) {
-        namespacePropertyUpdate.getPropertyRemovals().forEach(properties::remove);
+      if (null != namespaceUpdate.getPropertyRemovals()) {
+        namespaceUpdate.getPropertyRemovals().forEach(properties::remove);
       }
-      if (null != namespacePropertyUpdate.getPropertyUpdates()) {
-        properties.putAll(namespacePropertyUpdate.getPropertyUpdates());
+      if (null != namespaceUpdate.getPropertyUpdates()) {
+        properties.putAll(namespaceUpdate.getPropertyUpdates());
       }
 
       Namespace updatedNamespace = ImmutableNamespace.copyOf(namespace).withProperties(properties);

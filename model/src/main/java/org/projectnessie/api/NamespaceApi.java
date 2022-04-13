@@ -18,7 +18,7 @@ package org.projectnessie.api;
 import javax.validation.constraints.NotNull;
 import org.projectnessie.api.params.MultipleNamespacesParams;
 import org.projectnessie.api.params.NamespaceParams;
-import org.projectnessie.api.params.NamespacePropertyUpdate;
+import org.projectnessie.api.params.NamespaceUpdate;
 import org.projectnessie.error.NessieNamespaceAlreadyExistsException;
 import org.projectnessie.error.NessieNamespaceNotEmptyException;
 import org.projectnessie.error.NessieNamespaceNotFoundException;
@@ -74,7 +74,14 @@ public interface NamespaceApi {
   GetNamespacesResponse getNamespaces(@NotNull MultipleNamespacesParams params)
       throws NessieReferenceNotFoundException;
 
-  void updateProperties(
-      @NotNull NamespaceParams params, @NotNull NamespacePropertyUpdate namespacePropertyUpdate)
+  /**
+   * Updates/removes properties for a given {@link Namespace}.
+   *
+   * @param params The {@link NamespaceParams} that includes the parameters for the API call.
+   * @param namespaceUpdate The instance including the property updates/deletes.
+   * @throws NessieNamespaceNotFoundException If the namespace does not exist.
+   * @throws NessieReferenceNotFoundException If the reference could not be found.
+   */
+  void updateProperties(@NotNull NamespaceParams params, @NotNull NamespaceUpdate namespaceUpdate)
       throws NessieNamespaceNotFoundException, NessieReferenceNotFoundException;
 }

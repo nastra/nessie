@@ -137,5 +137,5 @@ public interface NessieApiV1 extends NessieApi {
   DeleteNamespaceBuilder deleteNamespace();
 
   /** Updates properties of a {@link org.projectnessie.model.Namespace}. */
-  UpdateNamespacePropertiesBuilder updateProperties();
+  UpdateNamespaceBuilder updateProperties();
 }

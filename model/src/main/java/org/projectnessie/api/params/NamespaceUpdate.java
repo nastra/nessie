@@ -23,9 +23,9 @@ import javax.annotation.Nullable;
 import org.immutables.value.Value;
 
 @Value.Immutable
-@JsonSerialize(as = ImmutableNamespacePropertyUpdate.class)
-@JsonDeserialize(as = ImmutableNamespacePropertyUpdate.class)
-public abstract class NamespacePropertyUpdate {
+@JsonSerialize(as = ImmutableNamespaceUpdate.class)
+@JsonDeserialize(as = ImmutableNamespaceUpdate.class)
+public abstract class NamespaceUpdate {
 
   @Nullable
   public abstract List<String> getPropertyRemovals();

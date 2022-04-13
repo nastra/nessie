@@ -25,7 +25,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -83,7 +82,7 @@ public abstract class Namespace extends Content {
 
   @Default
   public Map<String, String> getProperties() {
-    return Collections.unmodifiableMap(new HashMap<>());
+    return Collections.emptyMap();
   }
 
   /**
@@ -94,7 +93,7 @@ public abstract class Namespace extends Content {
    *     Namespace#name()} will be an empty string.
    */
   public static Namespace of(String... elements) {
-    return Namespace.of(new HashMap<>(), elements);
+    return Namespace.of(Collections.emptyMap(), elements);
   }
 
   /**

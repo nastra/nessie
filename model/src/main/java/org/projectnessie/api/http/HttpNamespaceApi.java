@@ -35,7 +35,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.projectnessie.api.NamespaceApi;
 import org.projectnessie.api.params.MultipleNamespacesParams;
 import org.projectnessie.api.params.NamespaceParams;
-import org.projectnessie.api.params.NamespacePropertyUpdate;
+import org.projectnessie.api.params.NamespaceUpdate;
 import org.projectnessie.error.NessieNamespaceAlreadyExistsException;
 import org.projectnessie.error.NessieNamespaceNotEmptyException;
 import org.projectnessie.error.NessieNamespaceNotFoundException;
@@ -134,7 +134,7 @@ public interface HttpNamespaceApi extends NamespaceApi {
 
   @Override
   @POST
-  @Path("/namespace/{ref}/{name}/properties")
+  @Path("/namespace/{ref}/{name}")
   @Produces(MediaType.APPLICATION_JSON)
   @APIResponses({
     @APIResponse(
@@ -151,9 +151,9 @@ public interface HttpNamespaceApi extends NamespaceApi {
               content = {
                 @Content(
                     mediaType = MediaType.APPLICATION_JSON,
-                    examples = {@ExampleObject(ref = "namespacePropertyUpdate")})
+                    examples = {@ExampleObject(ref = "namespaceUpdate")})
               })
           @NotNull
-          NamespacePropertyUpdate namespacePropertyUpdate)
+          NamespaceUpdate namespaceUpdate)
       throws NessieNamespaceNotFoundException, NessieReferenceNotFoundException;
 }

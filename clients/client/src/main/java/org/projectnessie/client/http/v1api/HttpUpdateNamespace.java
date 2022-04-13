@@ -18,52 +18,50 @@ package org.projectnessie.client.http.v1api;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Nullable;
-import org.projectnessie.api.params.ImmutableNamespacePropertyUpdate;
+import org.projectnessie.api.params.ImmutableNamespaceUpdate;
 import org.projectnessie.api.params.NamespaceParams;
 import org.projectnessie.api.params.NamespaceParamsBuilder;
-import org.projectnessie.client.api.UpdateNamespacePropertiesBuilder;
+import org.projectnessie.client.api.UpdateNamespaceBuilder;
 import org.projectnessie.client.http.NessieApiClient;
 import org.projectnessie.error.NessieNamespaceNotFoundException;
 import org.projectnessie.error.NessieReferenceNotFoundException;
 import org.projectnessie.model.Namespace;
 
-final class HttpUpdateNamespaceProperties extends BaseHttpRequest
-    implements UpdateNamespacePropertiesBuilder {
+final class HttpUpdateNamespace extends BaseHttpRequest implements UpdateNamespaceBuilder {
 
   private final NamespaceParamsBuilder builder = NamespaceParams.builder();
-  private final ImmutableNamespacePropertyUpdate.Builder updateBuilder =
-      ImmutableNamespacePropertyUpdate.builder();
+  private final ImmutableNamespaceUpdate.Builder updateBuilder = ImmutableNamespaceUpdate.builder();
 
-  HttpUpdateNamespaceProperties(NessieApiClient client) {
+  HttpUpdateNamespace(NessieApiClient client) {
     super(client);
   }
 
   @Override
-  public UpdateNamespacePropertiesBuilder namespace(Namespace namespace) {
+  public UpdateNamespaceBuilder namespace(Namespace namespace) {
     builder.namespace(namespace);
     return this;
   }
 
   @Override
-  public UpdateNamespacePropertiesBuilder refName(String refName) {
+  public UpdateNamespaceBuilder refName(String refName) {
     builder.refName(refName);
     return this;
   }
 
   @Override
-  public UpdateNamespacePropertiesBuilder hashOnRef(@Nullable String hashOnRef) {
+  public UpdateNamespaceBuilder hashOnRef(@Nullable String hashOnRef) {
     builder.hashOnRef(hashOnRef);
     return this;
   }
 
   @Override
-  public UpdateNamespacePropertiesBuilder propertyRemovals(List<String> propertyRemovals) {
+  public UpdateNamespaceBuilder propertyRemovals(List<String> propertyRemovals) {
     updateBuilder.propertyRemovals(propertyRemovals);
     return this;
   }
 
   @Override
-  public UpdateNamespacePropertiesBuilder propertyUpdates(Map<String, String> propertyUpdates) {
+  public UpdateNamespaceBuilder propertyUpdates(Map<String, String> propertyUpdates) {
     updateBuilder.propertyUpdates(propertyUpdates);
     return this;
   }

@@ -95,7 +95,7 @@ components:
               - b
               - d
 
-    namespacePropertyUpdate:
+    namespaceUpdate:
       value:
         propertyUpdates:
           - key1: value1
