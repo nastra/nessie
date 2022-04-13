@@ -29,7 +29,7 @@ import org.projectnessie.model.Namespace;
 final class HttpCreateNamespace extends BaseHttpRequest implements CreateNamespaceBuilder {
 
   private final NamespaceParamsBuilder builder = NamespaceParams.builder();
-  private Map<String, String> properties;
+  private final ImmutableNamespaceUpdate.Builder updateBuilder = ImmutableNamespaceUpdate.builder();
 
   HttpCreateNamespace(NessieApiClient client) {
     super(client);
@@ -55,17 +55,19 @@ final class HttpCreateNamespace extends BaseHttpRequest implements CreateNamespa
 
   @Override
   public CreateNamespaceBuilder properties(Map<String, String> properties) {
-    this.properties = properties;
+    updateBuilder.putAllPropertyUpdates(properties);
+    return this;
+  }
+
+  @Override
+  public CreateNamespaceBuilder property(String key, String value) {
+    updateBuilder.putPropertyUpdates(key, value);
     return this;
   }
 
   @Override
   public Namespace create()
       throws NessieNamespaceAlreadyExistsException, NessieReferenceNotFoundException {
-    return client
-        .getNamespaceApi()
-        .createNamespace(
-            builder.build(),
-            ImmutableNamespaceUpdate.builder().propertyUpdates(properties).build());
+    return client.getNamespaceApi().createNamespace(builder.build(), updateBuilder.build());
   }
 }

@@ -15,8 +15,8 @@
  */
 package org.projectnessie.client.api;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.projectnessie.error.NessieNamespaceNotFoundException;
 import org.projectnessie.error.NessieReferenceNotFoundException;
 import org.projectnessie.model.Namespace;
@@ -30,11 +30,11 @@ public interface UpdateNamespaceBuilder extends OnNamespaceBuilder<UpdateNamespa
 
   UpdateNamespaceBuilder updateProperty(String key, String value);
 
-  UpdateNamespaceBuilder deleteProperty(String key);
+  UpdateNamespaceBuilder removeProperty(String key);
 
   UpdateNamespaceBuilder updateProperties(Map<String, String> propertyUpdates);
 
-  UpdateNamespaceBuilder removeProperties(List<String> propertyRemovals);
+  UpdateNamespaceBuilder removeProperties(Set<String> propertyRemovals);
 
   void update() throws NessieNamespaceNotFoundException, NessieReferenceNotFoundException;
 }

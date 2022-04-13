@@ -15,8 +15,8 @@
  */
 package org.projectnessie.client.http.v1api;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.annotation.Nullable;
 import org.projectnessie.api.params.ImmutableNamespaceUpdate;
 import org.projectnessie.api.params.NamespaceParams;
@@ -55,7 +55,7 @@ final class HttpUpdateNamespace extends BaseHttpRequest implements UpdateNamespa
   }
 
   @Override
-  public UpdateNamespaceBuilder removeProperties(List<String> propertyRemovals) {
+  public UpdateNamespaceBuilder removeProperties(Set<String> propertyRemovals) {
     updateBuilder.propertyRemovals(propertyRemovals);
     return this;
   }
@@ -67,14 +67,14 @@ final class HttpUpdateNamespace extends BaseHttpRequest implements UpdateNamespa
   }
 
   @Override
-  public UpdateNamespaceBuilder deleteProperty(String key) {
+  public UpdateNamespaceBuilder removeProperty(String key) {
     updateBuilder.addPropertyRemovals(key);
     return this;
   }
 
   @Override
   public UpdateNamespaceBuilder updateProperties(Map<String, String> propertyUpdates) {
-    updateBuilder.propertyUpdates(propertyUpdates);
+    updateBuilder.putAllPropertyUpdates(propertyUpdates);
     return this;
   }
 

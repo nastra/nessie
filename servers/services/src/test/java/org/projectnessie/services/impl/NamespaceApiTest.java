@@ -38,4 +38,16 @@ public class NamespaceApiTest {
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("Namespace name must not be empty");
   }
+
+  @Test
+  public void namespaceCreationWithPropertyRemoval() {
+    NamespaceApiImpl api = new NamespaceApiImpl(null, null, null, null);
+    assertThatThrownBy(
+            () ->
+                api.createNamespace(
+                    NamespaceParams.builder().refName("main").namespace(Namespace.of("a")).build(),
+                    ImmutableNamespaceUpdate.builder().addPropertyRemovals("key").build()))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Cannot remove properties during Namespace creation");
+  }
 }

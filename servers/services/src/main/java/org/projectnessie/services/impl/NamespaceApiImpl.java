@@ -93,11 +93,15 @@ public class NamespaceApiImpl extends BaseApiImpl implements NamespaceApi {
           };
 
       Preconditions.checkArgument(!namespace.isEmpty(), "Namespace name must not be empty");
+      Preconditions.checkArgument(
+          null == properties.getPropertyRemovals() || properties.getPropertyRemovals().isEmpty(),
+          "Cannot remove properties during Namespace creation");
       Namespace nsWithProps = namespace;
       if (null != properties.getPropertyUpdates()) {
         nsWithProps =
             ImmutableNamespace.copyOf(namespace).withProperties(properties.getPropertyUpdates());
       }
+
       Put put = Put.of(ContentKey.of(namespace.getElements()), nsWithProps);
       commit(branch, "create namespace " + namespace.name(), TreeApiImpl.toOp(put), validator);
 

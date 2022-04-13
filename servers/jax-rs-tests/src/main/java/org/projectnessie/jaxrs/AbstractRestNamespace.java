@@ -19,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -503,7 +504,7 @@ public abstract class AbstractRestNamespace extends AbstractRestRefLog {
         .reference(branch)
         .namespace(namespace)
         .updateProperties(ImmutableMap.of("key3", "val3", "key1", "xyz"))
-        .removeProperties(Arrays.asList("key2", "key5"))
+        .removeProperties(ImmutableSet.of("key2", "key5"))
         .update();
     ns = getApi().getNamespace().reference(branch).namespace(namespace).get();
     assertThat(ns.getProperties()).isEqualTo(ImmutableMap.of("key1", "xyz", "key3", "val3"));
