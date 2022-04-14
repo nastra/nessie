@@ -19,12 +19,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.projectnessie.client.api.NessieApiV1;
+import org.projectnessie.error.NessieConflictException;
+import org.projectnessie.error.NessieNotFoundException;
 import org.projectnessie.model.Branch;
 import org.projectnessie.model.CommitMeta;
 import org.projectnessie.model.ContentKey;
 import org.projectnessie.model.IcebergTable;
 import org.projectnessie.model.LogResponse;
 import org.projectnessie.model.LogResponse.LogEntry;
+import org.projectnessie.model.Namespace;
 import org.projectnessie.model.NessieConfiguration;
 import org.projectnessie.model.Operation.Put;
 import org.projectnessie.model.Reference;
@@ -85,5 +88,19 @@ public abstract class AbstractCompatibilityTests {
 
     assertThat(api.getContent().refName(branch.getName()).key(key).get())
         .containsEntry(key, content);
+  }
+
+  @Test
+  @VersionCondition(minVersion = "0.23.1")
+  public void createNamespace() throws NessieNotFoundException, NessieConflictException {
+    Branch defaultBranch = api.getDefaultBranch();
+    Branch branch = Branch.of("createNamespace", defaultBranch.getHash());
+    Reference reference =
+        api.createReference().sourceRefName(defaultBranch.getName()).reference(branch).create();
+
+    Namespace namespace = Namespace.of("a", "b", "c");
+    api.createNamespace().namespace(namespace).reference(reference).create();
+    assertThat(api.getNamespace().namespace(namespace).reference(reference).get())
+        .isEqualTo(namespace);
   }
 }

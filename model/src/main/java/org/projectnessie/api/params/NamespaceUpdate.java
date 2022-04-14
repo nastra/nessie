@@ -15,6 +15,7 @@
  */
 package org.projectnessie.api.params;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.Map;
@@ -25,6 +26,8 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonSerialize(as = ImmutableNamespaceUpdate.class)
 @JsonDeserialize(as = ImmutableNamespaceUpdate.class)
+// for backward-compatibility with older clients
+@JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class NamespaceUpdate {
 
   @Nullable

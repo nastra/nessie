@@ -20,6 +20,8 @@ import static org.projectnessie.model.UriUtil.GROUP_SEPARATOR_STRING;
 import static org.projectnessie.model.UriUtil.ZERO_BYTE_STRING;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -30,7 +32,6 @@ import java.util.Map;
 import java.util.Objects;
 import javax.validation.constraints.NotNull;
 import org.immutables.value.Value;
-import org.immutables.value.Value.Default;
 import org.immutables.value.Value.Derived;
 
 /**
@@ -80,10 +81,9 @@ public abstract class Namespace extends Content {
   @NotNull
   public abstract List<String> getElements();
 
-  @Default
-  public Map<String, String> getProperties() {
-    return Collections.emptyMap();
-  }
+  @NotNull
+  @JsonInclude(Include.NON_EMPTY)
+  public abstract Map<String, String> getProperties();
 
   /**
    * Builds a {@link Namespace} instance for the given elements.
