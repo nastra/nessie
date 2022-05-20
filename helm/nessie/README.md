@@ -90,7 +90,7 @@ This is broadly following the example from https://kubernetes.io/docs/tasks/acce
 * Start Minikube cluster: `minikube start`
 * Enable NGINX Ingress controller: `minikube addons enable ingress`
 * Verify Ingress controller is running: `kubectl get pods -n ingress-nginx`
-* Configure Nessie with the following ingress settings
+* Configure `values.yaml` with the following ingress settings
   ```
   ingress:
     enabled: true
@@ -105,7 +105,7 @@ This is broadly following the example from https://kubernetes.io/docs/tasks/acce
 * Install Nessie Helm chart: `helm install nessie -n nessie-ns helm/nessie`
 * Verify that the IP address is set:
   ```
-  $ kubectl get ingress
+  $ kubectl get ingress -n nessie-ns
   NAME     CLASS   HOSTS   ADDRESS        PORTS   AGE
   nessie   nginx   *       192.168.49.2   80      4m35s
   ```
